@@ -17,3 +17,7 @@ dropWorstSystems <- function(X,  bottom = 0.25) {
   sysmeans <- colMeans(X)
   return(X[,sysmeans >= quantile(sysmeans, bottom)])
 }
+
+assumptionsToPath <- function(assumptions) {
+  return(paste(collapse = "", substring(assumptions, 1, 1)))
+}

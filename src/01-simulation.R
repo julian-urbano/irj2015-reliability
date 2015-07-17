@@ -33,7 +33,7 @@ source("src/common.R")
 source("src/simulation.R")
 
 # Prepare output directory
-path <- file.path("scratch/01-simulation", collection.name, paste(collapse = "", substring(assumptions, 1, 1)))
+path <- file.path("scratch/01-simulation", collection.name, assumptionsToPath(assumptions))
 dir.create(path, recursive = T, showWarnings = F)
 
 # EXECUTION ############################################################################################################
