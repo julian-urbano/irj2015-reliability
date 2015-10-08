@@ -13,6 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 
+source("src/gt4ireval.R")
+source("src/measures/tauAP.R")
+
 library(ks) # To estimate pdfs
 library(Matrix) # To improve Cholesky decomposition
 
@@ -193,4 +196,63 @@ simulate.collection <- function(config, n_t_, min_n_t__ = 200, n_t__factor = 4)
   }
 
   return(Y)
+}
+
+# Diagnosis ============================================================================================================
+
+diagnose.simulation <- function(X, Y,
+                                decX = decompose.effects(X),
+                                F_tX = estimate.cdf(decX$NU_t, xmin = -1, xmax = 1),
+                                F_EX = apply(decX$E, 2, function(e) estimate.cdf(e, xmin = min(e), xmax = max(e))),
+                                gX = g.study(X))
+{
+  decY <- decompose.effects(Y)
+  gY <- g.study(Y)
+
+  gXsum <- sum(c(gX$var.s, gX$var.q, gX$var.e))
+  gYsum <- sum(c(gY$var.s, gY$var.q, gY$var.e))
+
+  # Coefficients of the correlation matrices
+  corX <- cor(decX$E)
+  corY <- cor(decY$E)
+  # don't use the diagonals (they're always 1)
+  diag(corX) <- NA
+  diag(corY) <- NA
+  corX <- as.vector(corX)
+  corY <- as.vector(corY)
+
+  # Residual variances
+  varX <- apply(decX$E, 2, var)
+  varY <- apply(decY$E, 2, var)
+
+  # Cramer-von Mises (topics)
+  if(nrow(X) > nrow(Y)) {
+    bigger <- decX
+  } else {
+    bigger <- decY
+  }
+  F_tY <- ecdf(decY$NU_t)
+  w2_t <- mean( (F_tX(bigger$NU_t) - F_tY(bigger$NU_t))^2 )
+  # Cramer-von Mises (residuals)
+  F_EY <- apply(decY$E, 2, ecdf)
+  w2_E <- 0
+  for(f in 1:ncol(X)) {
+    w2_E <- w2_E + mean( (F_EX[[f]](bigger$E[,f]) - F_EY[[f]](bigger$E[,f]))^2 )
+  }
+  w2_E <- w2_E / length(F_EX)
+
+  return(c(#mu = decY$mu - decX$mu,
+           mu_s = mean( (decY$mu+decY$NU_s) - (decX$mu+decX$NU_s) ),
+           #rmse_s = sqrt(mean( ((decY$mu+decY$NU_s) - (decX$mu+decX$NU_s))^2 )),
+		   #tau = cor(decX$NU_s, decY$NU_s, method = "k"),
+           tauAP = tauAP.actual(Y, X),
+           #r = cor(decX$NU_s, decY$NU_s, method = "p"),
+           w2_t = w2_t,
+           w2_E = w2_E,
+           var_s = gY$var.s/gYsum - gX$var.s/gXsum,
+           var_t = gY$var.q/gYsum - gX$var.q/gXsum,
+           var_st = gY$var.e/gYsum - gX$var.e/gXsum,
+           sd_var = sd(varY) - sd(varX),
+           cor = cor(corX, corY, use = "complete")
+  ))
 }
