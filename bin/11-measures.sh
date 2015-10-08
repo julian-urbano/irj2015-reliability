@@ -13,14 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 
-# If you want to use a single machine (and single process), set SGE=false
-# and make RSCRIPT point to the Rscript binary in your machine.
-# Set SGE=true if you want to use an SGE cluster through qsub.
-# You may need to edit file 'bin/qsub.sub' to change how R is loaded, as well
-# as the notification e-mail address.
-SGE=true
-RSCRIPT=/soft/R-3.1.1/bin/Rscript
+COMMAND=11-measures
+LOOP_MEASURES=true
+LOOP_COLLECTIONS=true
+LOOP_ASSUMPTIONS=true
 
-# Number of seconds to wait between qsub calls
-SGE_WAIT=0.5
-
+source bin/command.sh

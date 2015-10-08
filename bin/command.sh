@@ -43,6 +43,9 @@ if [ "$LOOP_ASSUMPTIONS" != true ]; then
 	RANDOM_SAMPLING=("")
 fi
 
+# Create dir for qsub's out and err files
+mkdir -p scratch/qout
+
 for MEASURE in "${MEASURES[@]}"; do
 	for COLLECTION in "${COLLECTIONS[@]}"; do
 		for N in "${NORMAL[@]}"; do
