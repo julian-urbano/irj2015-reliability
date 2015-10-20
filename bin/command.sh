@@ -55,11 +55,12 @@ for MEASURE in "${MEASURES[@]}"; do
 						if [ "$SGE" == true ]; then
 							qsub -v COMMAND=$COMMAND -v MEASURE=$MEASURE -v COLLECTION=$COLLECTION \
 								-v NORMAL=$N -v HOMOSCEDASTIC=$H -v UNCORRELATED=$U -v RANDOM_SAMPLING=$R \
-								-N "$COLLECTION$MEASURE$N$H$U$R$COMMAND" \
+								-N "$COLLECTION$MEASURE$N$H$U$R($COMMAND)" \
 								bin/qsub.sub
 							sleep $SGE_WAIT
 						else
 							echo "$RSCRIPT" src/${COMMAND}.R $MEASURE $COLLECTION $N $H $U $R
+							"$RSCRIPT" src/${COMMAND}.R $MEASURE $COLLECTION $N $H $U $R
 						fi
 					done
 				done
