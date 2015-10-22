@@ -28,7 +28,7 @@ measure.F1.estimate <- function(X, n_t_, minDelta = .05, sig.level = 0.05)
 measure.F1.actual <- function(X_estimate, X_truth, minDelta = .05, sig.level = 0.05) {
   g <- g.study(X_estimate)
   mu.hat <- colMeans(X_estimate)
-  p <- pf(g$em.s / g$em.e, df1 = g$n.s-1, df2 = (g$n.s-1) * (g$n.q-1), lower.tail = F)
+  p <- pf(g$em.s / g$em.e, df1 = g$n.s-1, df2 = (g$n.s-1) * (g$n.q-1), lower.tail = FALSE)
  
   # significant and at least minDelta?
   if(p < sig.level & max(mu.hat)-min(mu.hat) >= minDelta) {

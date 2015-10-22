@@ -88,13 +88,13 @@ estimate.icdf <- function(x, xmin = min(x), xmax = max(x))
 ## The returned object contains the effect decomposition of the original data, the kernel-density estimated distribution
 ## functions of the residuals and topic effects, the covariance matrix and its Cholesky decompositioin. Appropriate
 ## transformations are applied according to the assumptions.
-configure.simulation <- function(X, normal = F, homoscedastic = F, uncorrelated = F, random = T)
+configure.simulation <- function(X, normal = FALSE, homoscedastic = FALSE, uncorrelated = FALSE, random = TRUE)
 {
   # min and max effect score, to use later on when estimating distribution functions
   xmin <- -1
   xmax <- 1
   # If not Normal assumption, transform to logit and update xmin and xmax
-  if(normal == F) {
+  if(normal == FALSE) {
     X <- logit(X)
     xmin <- -logit(1)
     xmax <- logit(1)
@@ -104,7 +104,7 @@ configure.simulation <- function(X, normal = F, homoscedastic = F, uncorrelated 
   dec <- decompose.effects(X)
 
   # If Homoscedastic assumption, standardize residuals with pooled variance
-  if(homoscedastic == T) {
+  if(homoscedastic == TRUE) {
     var_p <- mean(apply(dec$E, 2, var))
     dec$E <- apply(dec$E, 2, function(e) { e / sd(e) * sqrt(var_p)})
   }
@@ -120,7 +120,7 @@ configure.simulation <- function(X, normal = F, homoscedastic = F, uncorrelated 
   dec$Sigma <- as.matrix(nearPD(dec$Sigma)$mat) # compute the nearest positive definite matrix
 
   # If Uncorrelated assumption, set all off-diagonal covariances to 0
-  if(uncorrelated == T) {
+  if(uncorrelated == TRUE) {
     dec$Sigma <- diag(diag(dec$Sigma), ncol = ncol(dec$Sigma))
   }
 
@@ -140,7 +140,7 @@ simulate.collection <- function(config, n_t_, min_n_t__ = 200, n_t__factor = 4)
 
   # Generate a matrix of normal random vectors with the given covariance matrix
   # If not Random sampling assumption, generate many more random vectors, to select later on
-  if(config$assumptions$random == F) {
+  if(config$assumptions$random == FALSE) {
     R <- matrix(rnorm(ncol(config$Sigma) * max(min_n_t__, n_t_ * n_t__factor)), ncol = ncol(config$Sigma))
   } else {
     R <- matrix(rnorm(ncol(config$Sigma) * n_t_), ncol = ncol(config$Sigma))
@@ -156,7 +156,7 @@ simulate.collection <- function(config, n_t_, min_n_t__ = 200, n_t__factor = 4)
   Z <- matrix(NA, ncol = ncol(U), nrow = nrow(U))
   for(i in 1:(ncol(Z)-1)) { # skip last vector, which corresponds to NU_t
     # If Normal assumption, use normal marginal, or the estimated otherwise
-    if(config$assumptions$normal == T) {
+    if(config$assumptions$normal == TRUE) {
       Z[,i] <- qnorm(U[,i], mean = 0, sd = sqrt(config$Sigma[i,i]))
     } else{
       Z[,i] <- config$ICDF_e[[i]](U[,i])
@@ -165,7 +165,7 @@ simulate.collection <- function(config, n_t_, min_n_t__ = 200, n_t__factor = 4)
   Z[,ncol(Z)] <- config$icdf_t(U[,ncol(Z)])
 
   # If not Random sampling assumption, randomly select n_t_ topics without uniform sampling probability
-  if(config$assumptions$random == F) {
+  if(config$assumptions$random == FALSE) {
     # First sort Z by topic effect
     Z <- Z[order(Z[,ncol(Z)]),]
     # The probability of sampling each topic will be given by de pdf of a Beta distribution with random parameters
@@ -180,7 +180,7 @@ simulate.collection <- function(config, n_t_, min_n_t__ = 200, n_t__factor = 4)
     P <- P[-c(1, length(P))] # remove the two extra points here
     P <- P / sum(P) # Normalize to sum 1
     # Now randomly select n_t_ topics without replacement, using the probabilities of sampling just generated
-    Z <- Z[sample(1:nrow(Z), size = n_t_, replace = F, prob = P),]
+    Z <- Z[sample(1:nrow(Z), size = n_t_, replace = FALSE, prob = P),]
   }
 
   # Generate simulated matrix
@@ -191,7 +191,7 @@ simulate.collection <- function(config, n_t_, min_n_t__ = 200, n_t__factor = 4)
   colnames(Y) <- names(config$NU_s)
 
   # If not Normal assumption, transform back from logit
-  if(config$assumptions$normal == F) {
+  if(config$assumptions$normal == FALSE) {
     Y <- invlogit(Y)
   }
 

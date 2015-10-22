@@ -18,7 +18,7 @@ source("src/measures/tauAP.R")
 measure.EtauAP.estimate <- function(X, n_t_)
 {
   # Sort by system effectiveness so we don't have to worry about the sign
-  X <- X[,order(colMeans(X), decreasing = T)]
+  X <- X[,order(colMeans(X), decreasing = TRUE)]
   n_s <- ncol(X) # number of systems
 
   # Accumulate probabilities of no swap throughout the ranking

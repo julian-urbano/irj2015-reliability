@@ -18,7 +18,7 @@ source("config/params.R")
 # CONFIG ###############################################################################################################
 
 # Check command-line parameters
-args <- commandArgs(trailingOnly = T)
+args <- commandArgs(trailingOnly = TRUE)
 measure.name <- args[1]
 
 measure.path <- file.path("scratch/11-measures", measure.name)
@@ -34,11 +34,11 @@ source("src/var-components.R")
 
 # Prepare output directory
 path <- "output/measures"
-dir.create(path, recursive = T, showWarnings = F)
+dir.create(path, recursive = TRUE, showWarnings = FALSE)
 
 data.measure <- NULL # to store measure-wise data
 
-for(collection.name in list.dirs(measure.path, F, F)) {
+for(collection.name in list.dirs(measure.path, FALSE, FALSE)) {
   # Output basic info
   cat(paste(measure.path, ": collection =", collection.name, "\n"))
   flush.console()
@@ -48,12 +48,12 @@ for(collection.name in list.dirs(measure.path, F, F)) {
   pb <- txtProgressBar(min = 0, max = 16 * length(.N_t), style = 3)
   setTxtProgressBar(pb, 0)
   i <- 0
-  for(assumptions.name in list.dirs(file.path(measure.path, collection.name), F, F)) {
+  for(assumptions.name in list.dirs(file.path(measure.path, collection.name), FALSE, FALSE)) {
     assumptions <- strsplit(assumptions.name, split="")[[1]]
     for(n_t in .N_t) {
       data <- read.csv(file.path(measure.path, collection.name, assumptions.name, paste0(n_t, ".csv")))
       # Append info about collection, assumptions and n_t, and append to data-collection
-      data <- cbind(stringsAsFactors = F,
+      data <- cbind(stringsAsFactors = FALSE,
                     collection = collection.name, normal = assumptions[1], homoscedastic = assumptions[2],
                     uncorrelated = assumptions[3], random = assumptions[4], n_t = n_t, data)
       data.collection <- rbind(data.collection, data)
@@ -66,7 +66,7 @@ for(collection.name in list.dirs(measure.path, F, F)) {
   data.measure <- rbind(data.measure, data.collection)
 }
 
-write.csv(file = file.path(path, paste0(measure.name, ".csv")), row.names = F, data.measure)
+write.csv(file = file.path(path, paste0(measure.name, ".csv")), row.names = FALSE, data.measure)
 
 # VAR COMPONENTS #######################################################################################################
 
@@ -76,7 +76,7 @@ flush.console()
 
 # Prepare output directory
 path <- "output/measures/variance-existing"
-dir.create(path, recursive = T, showWarnings = F)
+dir.create(path, recursive = TRUE, showWarnings = FALSE)
 
 df <- data.measure #read.csv(file.path("output/measures", paste0(measure.name, ".csv")))
 df$n_t <- as.factor(df$n_t) # for ANOVA
@@ -91,7 +91,7 @@ flush.console()
 
 # Prepare output directory
 path <- "output/measures/variance-new"
-dir.create(path, recursive = T, showWarnings = F)
+dir.create(path, recursive = TRUE, showWarnings = FALSE)
 
 df <- data.measure #read.csv(file.path("output/measures", paste0(measure.name, ".csv")))
 
@@ -101,7 +101,7 @@ res <- aggregate(actual~collection+normal+homoscedastic+uncorrelated+random+n_t,
 
 s <- stack(df[-1:-9]) # transform into long format (skip collection, assumptions, etc)
 names(s)[1:2] <- c("estimate","n_tp")
-s$n_tp <- as.integer(gsub("n_t_","",s$n_tp,fixed = T)) # transform n_t' values into integers
+s$n_tp <- as.integer(gsub("n_t_","",s$n_tp,fixed = TRUE)) # transform n_t' values into integers
 
 # append all our factors; they are in the same order as in s
 s$collection <- df$collection

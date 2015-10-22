@@ -31,8 +31,8 @@ tauAP.actual <- function(X_estimate, X_truth) {
 
   truth <- colMeans(X_truth)
   estimate <- colMeans(X_estimate)
-  truth.sorted <- order(truth, decreasing = T)
-  estimate.sorted <- order(estimate, decreasing = T)
+  truth.sorted <- order(truth, decreasing = TRUE)
+  estimate.sorted <- order(estimate, decreasing = TRUE)
 
   p <- 0
   for(i in 2:n_s) {

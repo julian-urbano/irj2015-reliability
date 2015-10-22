@@ -18,7 +18,7 @@
 #$ -e scratch/qout/$JOB_NAME.err
 #$ -q default.q
 #$ -m as
-#$ -M urbano.julian@gmail.com
+#$ -M your@email.com
 
 module load R
 

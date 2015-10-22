@@ -18,7 +18,7 @@ source("config/params.R")
 # CONFIG ###############################################################################################################
 
 # Check command-line parameters
-args <- commandArgs(trailingOnly = T)
+args <- commandArgs(trailingOnly = TRUE)
 measure.name <- args[1]
 collection.name <- args[2]
 assumptions <- as.list(as.logical(args[3:6]))
@@ -36,7 +36,7 @@ source(measure.path)
 
 # Prepare output directory
 path <- file.path("scratch/11-measures", measure.name, collection.name, assumptionsToPath(assumptions))
-dir.create(path, recursive = T, showWarnings = F)
+dir.create(path, recursive = TRUE, showWarnings = FALSE)
 path.simulation <- file.path("scratch/01-simulation", collection.name, assumptionsToPath(assumptions))
 
 # EXECUTION ############################################################################################################
@@ -72,6 +72,6 @@ for(n_t_ in .N_t) {
     setTxtProgressBar(pb, trial)
   } # trials
 
-  write.csv(file = file.path(path, paste0(n_t_,".csv")), row.names = F, round(results, 6))
+  write.csv(file = file.path(path, paste0(n_t_,".csv")), row.names = FALSE, round(results, 6))
   close(pb)
 } # n_t_

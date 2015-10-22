@@ -23,11 +23,11 @@ diagnosis.path <- "scratch/02-diagnosis"
 
 # Prepare output directory
 path <- "output/diagnosis"
-dir.create(path, recursive = T, showWarnings = F)
+dir.create(path, recursive = TRUE, showWarnings = FALSE)
 
 data.diagnosis <- NULL # to store all data
 
-for(collection.name in list.dirs(diagnosis.path, F, F)) {
+for(collection.name in list.dirs(diagnosis.path, FALSE, FALSE)) {
   # Output basic info
   cat(paste(diagnosis.path, ": collection =", collection.name, "\n"))
   flush.console()
@@ -37,12 +37,12 @@ for(collection.name in list.dirs(diagnosis.path, F, F)) {
   pb <- txtProgressBar(min = 0, max = 16*length(.N_t), style = 3)
   setTxtProgressBar(pb, 0)
   i <- 0
-  for(assumptions.name in list.dirs(file.path(diagnosis.path, collection.name), F, F)) {
+  for(assumptions.name in list.dirs(file.path(diagnosis.path, collection.name), FALSE, FALSE)) {
     assumptions <- strsplit(assumptions.name, split="")[[1]]
     for(n_t in .N_t) {
       data <- read.csv(file.path(diagnosis.path, collection.name, assumptions.name, paste0(n_t,".csv")))
       # Append info about collection, assumptions and n_t, and append to data.collection
-      data <- cbind(stringsAsFactors = F,
+      data <- cbind(stringsAsFactors = FALSE,
                     collection = collection.name, normal = assumptions[1], homoscedastic = assumptions[2],
                     uncorrelated = assumptions[3], random = assumptions[4], n_t = n_t, data)
       data.collection <- rbind(data.collection, data)
@@ -55,7 +55,7 @@ for(collection.name in list.dirs(diagnosis.path, F, F)) {
   data.diagnosis <- rbind(data.diagnosis, data.collection)
 }
 
-write.csv(file = file.path(path, "indicators.csv"), row.names = F, data.diagnosis)
+write.csv(file = file.path(path, "indicators.csv"), row.names = FALSE, data.diagnosis)
 
 # VAR COMPONENTS #######################################################################################################
 
@@ -66,7 +66,7 @@ df$n_t <- as.factor(df$n_t) # for ANOVA
 
 # Prepare output directory
 path <- "output/diagnosis/variance"
-dir.create(path, recursive = T, showWarnings = F)
+dir.create(path, recursive = TRUE, showWarnings = FALSE)
 
 for(indicator in names(df)[-1:-7]) { # Ignore first columns (collection, assumptions, etc)
   cat(indicator,"\n")

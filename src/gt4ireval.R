@@ -17,7 +17,7 @@
 # For efficiency, we commented-out the interval estimates in the D-study.
 # Also avoid warning messages unless required.
 
-g.study <- function(data, drop = 0, showWarnings = F) {
+g.study <- function(data, drop = 0, showWarnings = FALSE) {
   if(!is.data.frame(data) & !is.matrix(data))
     stop("Data must be a data.frame or matrix (columns for systems and rows for queries)")
 

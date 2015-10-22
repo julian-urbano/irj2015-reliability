@@ -33,7 +33,7 @@ split.half <- function(X, FUN, points = 20, maxObservations = 1000, maxTrials = 
       x <- at[i] # subset size
       x1 <- sample(1:maxx, x) # topic ID for subset 1
       x2 <- sample((1:maxx)[-x1], x) # topic ID for subset 2
-      res <- FUN(X[x1,, drop = F], X[x2,, drop = F]) # drop=F to avoid turning matrix into vector for subset size of 1
+      res <- FUN(X[x1,, drop = FALSE], X[x2,, drop = FALSE]) # drop=FALSE to avoid turning matrix into vector for subset size of 1
       return(res)
     })
     observations$y[(i-1)*trials + 1:trials] <- y

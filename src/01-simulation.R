@@ -18,7 +18,7 @@ source("config/params.R")
 # CONFIG ###############################################################################################################
 
 # Check command-line parameters
-args <- commandArgs(trailingOnly = T)
+args <- commandArgs(trailingOnly = TRUE)
 collection.name <- args[1]
 assumptions <- as.list(as.logical(args[2:5]))
 names(assumptions) <- c("normal", "homoscedastic", "uncorrelated", "random")
@@ -34,7 +34,7 @@ source("src/simulation.R")
 
 # Prepare output directory
 path <- file.path("scratch/01-simulation", collection.name, assumptionsToPath(assumptions))
-dir.create(path, recursive = T, showWarnings = F)
+dir.create(path, recursive = TRUE, showWarnings = FALSE)
 
 # EXECUTION ############################################################################################################
 
@@ -49,7 +49,7 @@ for(n_t_ in .N_t) {
   # Output basic info and initialize directory for n_t_
   cat(paste(path, ": n_t' =", n_t_, "\n"))
   flush.console()
-  dir.create(file.path(path, n_t_), recursive = T, showWarnings = F)
+  dir.create(file.path(path, n_t_), recursive = TRUE, showWarnings = FALSE)
 
   # Run trials
   pb <- txtProgressBar(min = 0, max = .N_TRIALS, style = 3)
@@ -58,7 +58,7 @@ for(n_t_ in .N_t) {
     set.seed(trial * n_t_) # All simulations for each trial-n_t_ have the same seed across assumptions
     Y <- simulate.collection(cfg, n_t_)
 
-    write.csv(file = file.path(path, n_t_, paste0(trial, ".csv")), row.names = F, round(Y,4))
+    write.csv(file = file.path(path, n_t_, paste0(trial, ".csv")), row.names = FALSE, round(Y,4))
     setTxtProgressBar(pb, trial)
   } # trial
   close(pb)

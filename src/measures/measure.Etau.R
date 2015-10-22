@@ -18,7 +18,7 @@ source("src/measures/tau.R")
 measure.Etau.estimate <- function(X, n_t_)
 {
   # Sort by system effectiveness so we don't have to worry about the sign
-  X <- X[,order(colMeans(X), decreasing = T)]
+  X <- X[,order(colMeans(X), decreasing = TRUE)]
   # Number of systems and system pairs
   n_s <- ncol(X)
   n_s.pairs <- n_s * (n_s - 1) / 2

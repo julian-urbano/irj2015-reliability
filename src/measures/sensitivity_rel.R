@@ -44,7 +44,7 @@ sensitivity_rel.actual <- function(X_estimate, X_truth, maxErrorRate = .05)
   s <- sign(d_estimate)*sign(d_truth)
   # and sort abs(d_estimate) and s by absolute value of d_estimate
   d_estimate <- abs(d_estimate)
-  o <- order(d_estimate, decreasing = T)
+  o <- order(d_estimate, decreasing = TRUE)
   d_estimate <- d_estimate[o]
   s <- s[o]
 
