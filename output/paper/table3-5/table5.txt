@@ -1,0 +1,9 @@
+Erho2 & Phi & F1
+Normality & $<\!1$\% & $<\!1$\% & $<\!1$\%
+Homoscedasticity & $<\!1$\% & $<\!1$\% & $<\!1$\%
+Uncorrelated effects & 7\% & $<\!1$\% & $<\!1$\%
+Random sampling & 15\% & 80\% & $<\!1$\%
+$n_t$ & 5\% & 5\% & 35\%
+Collection & 3\% & $<\!1$\% & 24\%
+residuals & 70\% & 15\% & 40\%
+Total error variance & 0.023804 & 0.225422 & 0.104402
