@@ -34,23 +34,3 @@ measure.Erho2.actual <- function(X_estimate, X_truth) {
   err <- mean(((mu_s.hat - mu.hat) - (mu_s - mu))^2)
   return(num / (num + err))
 }
-
-measure.Phi.estimate <- function(X, n_t_)
-{
-  g <- g.study(data = X, drop = 0)
-  d <- d.study(gdata = g, queries = n_t_)
-  return(d$Phi)
-}
-
-measure.Phi.actual <- function(X_estimate, X_truth)
-{
-  # truth
-  mu_s <- colMeans(X_truth)
-  mu <- mean(mu_s)
-  # estimate
-  mu_s.hat <- colMeans(X_estimate)
-
-  num <- mean((mu_s - mu)^2)
-  err <- mean((mu_s.hat - mu_s)^2)
-  return(num / (num + err))
-}
