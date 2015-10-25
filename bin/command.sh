@@ -20,7 +20,7 @@ if [ -z "$COMMAND" ]; then
 fi
 
 source config/environment.sh
-source config/parameters.sh
+source config/params.sh
 
 # Check whether we have to loop collections in this command.
 # If not, set to "" to iterate at least once.
