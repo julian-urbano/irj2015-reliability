@@ -42,6 +42,9 @@ invlogit <- function(p, a = .05)
 ##   x_st = mu + nu_s + nu_t + e_ts
 decompose.effects <- function(X)
 {
+  if(is.data.frame(X))
+    X <- as.matrix(X)
+
   mu <- mean(X) # true system mean scores
   NU_s <- colMeans(X) - mu # true system effects
   NU_t <- rowMeans(X) - mu # topic effects
@@ -90,6 +93,9 @@ estimate.icdf <- function(x, xmin = min(x), xmax = max(x))
 ## transformations are applied according to the assumptions.
 configure.simulation <- function(X, normal = FALSE, homoscedastic = FALSE, uncorrelated = FALSE, random = TRUE)
 {
+  if(is.data.frame(X))
+    X <- as.matrix(X)
+
   # min and max effect score, to use later on when estimating distribution functions
   xmin <- -1
   xmax <- 1
