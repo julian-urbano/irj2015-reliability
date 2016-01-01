@@ -1,0 +1,3 @@
+Almost 100,000 temporary files are generated in the process and stored in directory `scratch/`. They correspond to the simulated collections, diagnosis scores and accuracy/reliability estimates.
+
+They are not versioned in this repository for being too many, but ZIP archives are available from the [releases page](https://github.com/julian-urbano/irj2015-reliability/releases/tag/scratch) and from a [Zenodo repository](http://dx.doi.org/10.5281/zenodo.32606).
