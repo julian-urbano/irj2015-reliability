@@ -1,9 +1,8 @@
 This repository contains the data and source code for the following paper:
 
-* J. Urbano, "[Test Collection Reliability: A Study of Bias and Robustness to Statistical Assumptions via Stochastic Simulation](http://julian-urbano.info/wp-content/uploads/062-how-gain-discount-functions-affect-correlation-system-effectiveness-user-satisfaction.pdf)", *Information Retrieval Journal*, 2015.
+* J. Urbano, "[Test Collection Reliability: A Study of Bias and Robustness to Statistical Assumptions via Stochastic Simulation](http://julian-urbano.info/files/publications/064-test-collection-reliability-study-bias-robustness-statistical-assumptions-stochastic-simulation.pdf)", *Information Retrieval Journal*, 2015.
 
 A [single ZIP file](https://github.com/julian-urbano/irj2015-reliability/archive/master.zip) can be downloaded as well.
-
 
 
 ## Project Structure
@@ -29,11 +28,7 @@ It takes several days to run all the code, so it is ready to use an SGE cluster,
 6. Run script `bin/12-measures-compile.sh`. This compiles all accuracy and reliability scores, runs the variance components analysis, and stores the results in `output/measures/`.
 7. Run script `bin/99-paper.sh`. This generates all figures and tables in the paper and stores them in `output/paper/`.
 
-
-**TODO** If you are on a Windows machine, just use the `.bat` files instead of the `.sh` files.
-
-
-## How to customize and extend
+## How to customize and extend the results in the paper
 
 You can easily customize and extend the code to run with your own initial test collections, compute your own diagnosis indicators or your own measures of test collection accuracy. 
 
@@ -41,11 +36,11 @@ If you only want to use certain collections or measures, edit file `config/param
 
 Note that the script `src/99-paper.R` is only intended to generate the figures and tables in the paper. If you customize something and want a similar analysis, you will need to extend this script yourself.
 
-### Test collections
+### Custom test collections
 
-Simply add new CSV files with the topic-by-system effectiveness matrices in directory `data/` (no row names). Take a look for instance at [the file from the Robust 2003 collection](/data/robust2003.csv). After adding your own files, run all the scripts again as detailed [above](#how-to-replicate-the-results-in-the-paper).
+Simply add new CSV files with the topic-by-system effectiveness matrices in directory `data/` (no row names). Take a look for instance at the file from the [Robust 2003 collection](/data/robust2003.csv). After adding your own files, run all the scripts again as detailed [above](#how-to-replicate-the-results-in-the-paper).
 
-### Diagnosis indicators
+### Custom diagnosis indicators
 
 You can modify function `diagnose.simulation` in file `src/simulation.R` to customize the diagnosis indicators. This function is defined as:
 
@@ -57,20 +52,56 @@ You can modify function `diagnose.simulation` in file `src/simulation.R` to cust
 
 Parameters `X` and `Y` are the original and simulated collections, respectively. The rest of parameters are passed for efficiency purposes. They are the effect decomposition of the original collection, its kernel-density estimated marginal distributions, and its G-study. Take a look at `src/simulation.R` for the details, especially functions `decompose.effects` and `configure.simulation`.
 
-This function is called from `src/02-diagnosis.R` for each simulated collection. You can add a new indicator and add its name and value in the returned object. After that, run script `bin/02-diagnosis.sh` again to compute all diagnosis scores, and `bin/03-diagnosis-compile.sh` to aggregate results and run the variance components analysis.
+This function is called from `src/02-diagnosis.R` for each simulated collection. You can add a new indicator by adding its name and value in the returned object. After that, run script `bin/02-diagnosis.sh` again to compute all diagnosis scores, and `bin/03-diagnosis-compile.sh` to aggregate results and run the variance components analysis.
 
-### Accuracy/Reliability measures
+### Custom accuracy/reliability measures
 
-You can add a new measures by creating a file `src/measures/measure.<name>.R` for each of them. This file must contain two functions:
+You can add new measures by creating a file `src/measures/measure.<name>.R` for each of them. This file must contain two functions:
 
 * `measure.<name>.estimate`, which receives a simulated collection `X` and new topic set sizes `n_t`. It must return the *expected accuracy* of new collections of those sizes. This corresponds to *g(X, n_t')* in the paper.
 * `measure.<name>.actual`, which receives a simulated collection `X_estimate` and its original collection `X_truth`. It must return the *actual accuracy* of the simulated collection. This corresponds to *A(X, mu)* in the paper.
 
-Take a look for instance at measure [`EtauAP`](/src/measures/measure.EtauAP.R). These functions are called from `src/11-measures.R` for each simulated collection. After adding your own files, run script `bin/11-measures.sh´ again to compute all estimates, and `bin/12-measures-compile.sh` to aggregate results and run the variance components analysis.
+Take a look for instance at measure [`EtauAP`](/src/measures/measure.EtauAP.R). These functions are called from `src/11-measures.R` for each simulated collection. After adding your own files, run script `bin/11-measures.sh` again to compute all estimates, and `bin/12-measures-compile.sh` to aggregate results and run the variance components analysis.
 
-## Execution Details
+## How to simulate new arbitrary collections
 
-All scripts internally run the same basic code in `bin/command.sh` that runs jobs (in parallel if you use the cluster) for each combination of assumptions, collection and measure when appropriate. Behind the scenes, each of them runs an R script from the folder `src/`. See below for details.
+You can easily simulate new, arbitrary collections following these steps. First, load your original collection `X`. It must be a matrix or data frame where columns are systems and rows are topics:
+
+    X <- read.csv("collection.csv")
+    head(X)
+        sys1   sys2   sys3 ...
+    1 0.3878 0.3685 0.3951 ...
+    2 0.2000 0.0667 0.0092 ...
+    3 0.3290 0.3455 0.0472 ...
+    ...
+
+Load the script `src/simulation.R` (it also loads `src/gt4ireval.R` and `src/measures/tauAP.R` for diagnosis; you can ignore them if you just want to simulate):
+
+    source("src/simulation.R")
+
+Configure the simulation with your original data and desired statistical assumptions:
+
+    cfg <- configure.simulation(X,
+                                normal = FALSE, homoscedastic = FALSE,
+                                uncorrelated = FALSE, random = TRUE)
+
+Simulate a new collection `Y` based on the configuration and with the number of topics of your choice:
+ 
+    Y <- simulate.collection(cfg, 100)
+
+If you want, you can also diagnose the simulated collection. If you just want to diagnose a few collections, you can directly run:
+
+    diagnosis <- diagnose.simulation(X, Y)
+
+If you plan on diagnosing many collections, for efficiency it is advised to first precompute some things about the original collection and pass them to the diagnosis function:
+
+    decX <- decompose.effects(X)
+    gX <- g.study(X)
+    F_tX <- estimate.cdf(decX$NU_t, xmin = -1, xmax = 1)
+    F_EX <- apply(decX$E, 2, function(e)
+      estimate.cdf(e, xmin = min(-1, min(e)), xmax = max(1, max(e))))
+
+    diagnosis <- diagnose.simulation(X, Y, decX, F_tX, F_EX, gX)
 
 ## License
 
@@ -83,9 +114,6 @@ When using this archive, please [cite](CITE.bib) the above paper:
     @article{Urbano2015:reliability,
       author = {Urbano, Juli\'{a}n},
       journal = {Information Retrieval Journal},
-      number = {--},
-      pages = {--},
       title = {{Test Collection Reliability: A Study of Bias and Robustness to Statistical Assumptions via Stochastic Simulation}},
-      volume = {--},
       year = {2015}
     }
