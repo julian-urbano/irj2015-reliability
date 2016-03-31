@@ -102,8 +102,8 @@ configure.simulation <- function(X, normal = FALSE, homoscedastic = FALSE, uncor
   # If not Normal assumption, transform to logit and update xmin and xmax
   if(normal == FALSE) {
     X <- logit(X)
-    xmin <- -logit(1)
-    xmax <- logit(1)
+    xmin <- -2*logit(1)
+    xmax <- 2*logit(1)
   }
 
   # Decompose effects
