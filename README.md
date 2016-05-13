@@ -14,7 +14,7 @@ A [single ZIP file](https://github.com/julian-urbano/irj2015-reliability/archive
 * `src/` Source code in R.
 * `scratch/` Temporary files generated in the process.
 
-## How to replicate the results in the paper 
+## How to reproduce the results in the paper 
 
 It takes several days to run all the code, so it is ready to use an SGE cluster, parallelizing across collections, measures and assumptions. You can still run everything on a single machine using just one core. **It is important that you always run from the base directory**.
 
@@ -38,7 +38,7 @@ Note that the script `src/99-paper.R` is only intended to generate the figures a
 
 ### Custom test collections
 
-Simply add new CSV files with the topic-by-system effectiveness matrices in directory `data/` (no row names). Take a look for instance at the file from the [Robust 2003 collection](/data/robust2003.csv). After adding your own files, run all the scripts again as detailed [above](#how-to-replicate-the-results-in-the-paper).
+Simply add new CSV files with the topic-by-system effectiveness matrices in directory `data/` (no row names). Take a look for instance at the file from the [Robust 2003 collection](/data/robust2003.csv). After adding your own files, run all the scripts again as detailed [above](#how-to-reproduce-the-results-in-the-paper).
 
 ### Custom diagnosis indicators
 
