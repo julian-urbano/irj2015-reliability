@@ -1,8 +1,8 @@
 This repository contains the data and source code for the following paper:
 
-* J. Urbano, "[Test Collection Reliability: A Study of Bias and Robustness to Statistical Assumptions via Stochastic Simulation](http://julian-urbano.info/files/publications/064-test-collection-reliability-study-bias-robustness-statistical-assumptions-stochastic-simulation.pdf)", *Information Retrieval Journal*, 2015.
+* J. Urbano, "[Test Collection Reliability: A Study of Bias and Robustness to Statistical Assumptions via Stochastic Simulation](http://julian-urbano.info/files/publications/064-test-collection-reliability-study-bias-robustness-statistical-assumptions-stochastic-simulation.pdf)", *Information Retrieval Journal*, 2016.
 
-A [single ZIP file](https://github.com/julian-urbano/irj2015-reliability/archive/master.zip) can be downloaded as well.
+A [single ZIP file](https://github.com/julian-urbano/irj2016-reliability/archive/master.zip) can be downloaded as well.
 
 
 ## Project Structure
@@ -111,9 +111,12 @@ If you plan on diagnosing many collections, for efficiency it is advised to firs
 
 When using this archive, please [cite](CITE.bib) the above paper:
 
-    @article{Urbano2015:reliability,
-      author = {Urbano, Juli\'{a}n},
-      journal = {Information Retrieval Journal},
-      title = {{Test Collection Reliability: A Study of Bias and Robustness to Statistical Assumptions via Stochastic Simulation}},
-      year = {2015}
+    @article{Urbano2016:reliability,
+        author = {Urbano, Juli{\'{a}}n},
+        title = {{Test Collection Reliability: A Study of Bias and Robustness to Statistical Assumptions via Stochastic Simulation}},
+        journal = {Information Retrieval Journal},
+        volume = {19},
+        number = {3},
+        pages = {313--350},
+        year = {2016}
     }
