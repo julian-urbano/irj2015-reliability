@@ -2,7 +2,7 @@ This repository contains the data and source code for the following paper:
 
 * J. Urbano, "[Test Collection Reliability: A Study of Bias and Robustness to Statistical Assumptions via Stochastic Simulation](http://julian-urbano.info/files/publications/064-test-collection-reliability-study-bias-robustness-statistical-assumptions-stochastic-simulation.pdf)", *Information Retrieval Journal*, 2016.
 
-A [single ZIP file](https://github.com/julian-urbano/irj2016-reliability/archive/master.zip) can be downloaded as well.
+A [single ZIP file](https://github.com/julian-urbano/irj2015-reliability/archive/master.zip) can be downloaded as well.
 
 
 ## Project Structure
