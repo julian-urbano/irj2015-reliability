@@ -65,6 +65,8 @@ Take a look for instance at measure [`EtauAP`](/src/measures/measure.EtauAP.R). 
 
 ## How to simulate new arbitrary collections
 
+**NOTE: we published a different and improved simulation method in a [SIGIR 2018 paper](https://github.com/julian-urbano/sigir2018-simulation). We made it an [official R package](https://cran.r-project.org/web/packages/simIReff/index.html), and we strongly encourage you to use [that code](https://github.com/julian-urbano/simIReff) instead.**
+
 You can easily simulate new, arbitrary collections following these steps. First, load your original collection `X`. It must be a matrix or data frame where columns are systems and rows are topics:
 
     X <- read.csv("collection.csv")
