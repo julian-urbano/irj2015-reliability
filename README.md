@@ -4,7 +4,6 @@ This repository contains the data and source code for the following paper:
 
 A [single ZIP file](https://github.com/julian-urbano/irj2015-reliability/archive/master.zip) can be downloaded as well.
 
-
 ## Project Structure
 
 * `bin/` Shell scripts to run the code in Linux.
@@ -122,3 +121,5 @@ When using this archive, please [cite](CITE.bib) the above paper:
         pages = {313--350},
         year = {2016}
     }
+
+> This work was supported by an A4U postdoctoral grant, a Juan de la Cierva postdoctoral fellowship and grant HAR2011-27540 from the Spanish Government.
